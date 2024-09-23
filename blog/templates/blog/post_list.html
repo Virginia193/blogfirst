@@ -1,42 +1,351 @@
-{% load static %}
-<html>
-    <head>
-        <title>Django Girls blog</title>
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="{% static 'css/blog.css' %}">
-        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-    </head>
-    <body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Estudiantes</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Encabezado */
+        header {
+            background-color: #0d47a1;
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        /* Logo */
+        header img {
+            height: 150px;
+            width: auto;
+        }
+
+        /* Contenedor principal */
+        .main-container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        /* Botones principales */
+        .main-container button {
+            width: 80%;
+            padding: 15px;
+            font-size: 18px;
+            background-color: #0d47a1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+
+        .main-container button:hover {
+            background-color: #002171;
+        }
+
+        /* Contenido oculto (secciones de agregar/buscar estudiantes) */
+        .section {
+            display: none;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Formulario y tabla */
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #0d47a1;
+            color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .btn-group button {
+            padding: 5px;
+            font-size: 14px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .edit-btn {
+            background-color: #ffeb3b;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Encabezado con logo -->
+<header>
+    <img src="https://virtual.usac.edu.gt/dbeu/wp-content/uploads/2023/06/LOGOS-ENCABEZADO-PAGINAS-WEB-02-1024x567.jpg" alt="Logo Universidad">
+</header>
+
+<!-- Página de inicio -->
+<div class="main-container" id="homePage">
+    <h2>Bienvenido al Sistema de Gestión de Estudiantes</h2>
+    <button onclick="mostrarSeccion('agregarEstudiante')">Agregar Estudiantes</button>
+    <button onclick="mostrarSeccion('buscarEstudiante')">Buscar Estudiantes</button>
+</div>
+
+<!-- Sección de Agregar Estudiantes (restaurada con editar/eliminar) -->
+<div class="section" id="agregarEstudiante">
+    <h2>Agregar/Editar Estudiante</h2>
+    <form id="studentForm">
         <div>
-            <h1><a href="/">Django Girls Blog</a></h1>
+            <label for="studentId">Número de Carnet:</label>
+            <input type="text" id="studentId" name="studentId" placeholder="Ingresa el número de carnet" required>
         </div>
-        <div class="page-header">
-            <h1><a href="/">Django Girls Blog</a></h1>
+        <div>
+            <label for="studentName">Nombre Completo:</label>
+            <input type="text" id="studentName" name="studentName" placeholder="Ingresa el nombre completo" required>
         </div>
-        {% for post in posts %}
-        <div class="content container">
-            <div class="row">
-                <div class="col-md-8">
-                    {% for post in posts %}
-                        <div class="post">
-                            <div class="date">
-                                <p>publicado: {{ post.published_date }}</p>
-                            </div>
-                            <h2><a href="">{{ post.title }}</a></h2>
-                            <p>{{ post.text|linebreaksbr }}</p>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
+
+        <div>
+            <h3>Documentos Entregados:</h3>
+            <label><input type="checkbox" name="documents" value="nacimiento"> Certificación de Nacimiento</label><br>
+            <label><input type="checkbox" name="documents" value="titulo"> Fotostática de Título</label><br>
+            <label><input type="checkbox" name="documents" value="estudios"> Certificación de Estudios</label><br>
+            <label><input type="checkbox" name="documents" value="archivo"> Constancia de archivo de otra unidad académica</label>
         </div>
-        {% endfor %}
-        {% for post in posts %}
-            <div>
-                <p>published: {{ post.published_date }}</p>
-                <h2><a href="">{{ post.title }}</a></h2>
-                <p>{{ post.text|linebreaksbr }}</p>
-            </div>
-        {% endfor %}
-    </body>
+
+        <button type="button" onclick="guardarEstudiante()">Guardar Estudiante</button>
+
+        <!-- Tabla para mostrar los estudiantes -->
+        <h3>Lista de Estudiantes</h3>
+        <table id="studentsTable">
+            <thead>
+                <tr>
+                    <th>Número de Carnet</th>
+                    <th>Nombre Completo</th>
+                    <th>Completo</th>
+                    <th>Incompleto</th>
+                    <th>Expediente de Fuera</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </form>
+</div>
+
+<!-- Sección de Buscar Estudiantes -->
+<div class="section" id="buscarEstudiante">
+    <h2>Buscar Estudiante por Número de Carnet</h2>
+    <input type="text" id="buscarCarnet" placeholder="Ingresa el número de carnet">
+    <button type="button" onclick="buscarPorCarnet()">Buscar</button>
+
+    <div id="resultadoBusqueda"></div>
+</div>
+
+<script>
+    let editIndex = -1;
+
+    // Función para mostrar la sección seleccionada y ocultar las demás
+    function mostrarSeccion(seccionId) {
+        document.getElementById('homePage').style.display = 'none';
+        document.getElementById('agregarEstudiante').style.display = 'none';
+        document.getElementById('buscarEstudiante').style.display = 'none';
+        document.getElementById(seccionId).style.display = 'block';
+    }
+
+    // Guardar estudiante en localStorage y actualizar tabla
+    function guardarEstudiante() {
+        const carnet = document.getElementById("studentId").value;
+        const nombre = document.getElementById("studentName").value;
+
+        const documentos = document.querySelectorAll('input[name="documents"]:checked');
+        let documentosEntregados = Array.from(documentos).map(doc => doc.value);
+
+        const documentosNecesarios = ["nacimiento", "titulo", "estudios"];
+        const expedienteFuera = documentosEntregados.includes("archivo");
+
+        let completo = documentosNecesarios.every(doc => documentosEntregados.includes(doc));
+        let incompleto = !completo && documentosEntregados.some(doc => documentosNecesarios.includes(doc));
+
+        const estudiante = {
+            carnet,
+            nombre,
+            completo: completo ? "X" : "",
+            incompleto: incompleto ? "X" : "",
+            expedienteFuera: expedienteFuera ? "X" : ""
+        };
+
+        let estudiantes = JSON.parse(localStorage.getItem("estudiantes")) || [];
+
+        if (editIndex === -1) {
+            estudiantes.push(estudiante);
+        } else {
+            estudiantes[editIndex] = estudiante;
+            editIndex = -1;
+        }
+
+        localStorage.setItem("estudiantes", JSON.stringify(estudiantes));
+
+        document.getElementById("studentForm").reset();
+        alert("Estudiante guardado exitosamente");
+
+        actualizarTabla();
+    }
+
+    // Actualizar tabla de estudiantes
+    function actualizarTabla() {
+        const estudiantes = JSON.parse(localStorage.getItem("estudiantes")) || [];
+        const tabla = document.querySelector("#studentsTable tbody");
+        tabla.innerHTML = "";
+
+        estudiantes.forEach((est, index) => {
+            const fila = `<tr>
+                            <td>${est.carnet}</td>
+                            <td>${est.nombre}</td>
+                            <td>${est.completo}</td>
+                            <td>${est.incompleto}</td>
+                            <td>${est.expedienteFuera}</td>
+                            <td class="btn-group">
+                                <button class="edit-btn" onclick="editarEstudiante(${index})">Editar</button>
+                                <button class="delete-btn" onclick="eliminarEstudiante(${index})">Eliminar</button>
+                            </td>
+                          </tr>`;
+            tabla.innerHTML += fila;
+        });
+    }
+
+    // Editar estudiante
+    function editarEstudiante(index) {
+        const estudiantes = JSON.parse(localStorage.getItem("estudiantes")) || [];
+        const estudiante = estudiantes[index];
+
+        document.getElementById("studentId").value = estudiante.carnet;
+        document.getElementById("studentName").value = estudiante.nombre;
+
+        document.querySelectorAll('input[name="documents"]').forEach(checkbox => {
+            checkbox.checked = estudiante.documentosEntregados.includes(checkbox.value);
+        });
+
+        editIndex = index;
+        mostrarSeccion('agregarEstudiante');
+    }
+
+    // Eliminar estudiante
+    function eliminarEstudiante(index) {
+        let estudiantes = JSON.parse(localStorage.getItem("estudiantes")) || [];
+        estudiantes.splice(index, 1);
+        localStorage.setItem("estudiantes", JSON.stringify(estudiantes));
+
+        actualizarTabla();
+        alert("Estudiante eliminado correctamente");
+    }
+
+    // Buscar estudiante por carnet
+    function buscarPorCarnet() {
+        const carnetBuscado = document.getElementById("buscarCarnet").value;
+        const estudiantes = JSON.parse(localStorage.getItem("estudiantes")) || [];
+        const estudianteEncontrado = estudiantes.find(est => est.carnet === carnetBuscado);
+
+        const resultadoDiv = document.getElementById("resultadoBusqueda");
+
+        if (estudianteEncontrado) {
+            resultadoDiv.innerHTML = `
+                <p><strong>Número de Carnet:</strong> ${estudianteEncontrado.carnet}</p>
+                <p><strong>Nombre Completo:</strong> ${estudianteEncontrado.nombre}</p>
+                <p><strong>Completo:</strong> ${estudianteEncontrado.completo}</p>
+                <p><strong>Incompleto:</strong> ${estudianteEncontrado.incompleto}</p>
+                <p><strong>Expediente de Fuera:</strong> ${estudianteEncontrado.expedienteFuera}</p>
+            `;
+        } else {
+            resultadoDiv.innerHTML = `<p>Estudiante no encontrado.</p>`;
+        }
+    }
+
+    // Función para guardar el estudiante y determinar si tiene todos los documentos completos
+function guardarEstudiante() {
+    const carnet = document.getElementById("studentId").value;
+    const nombre = document.getElementById("studentName").value;
+
+    // Revisamos cuáles documentos fueron seleccionados
+    const documentos = document.querySelectorAll('input[name="documents"]:checked');
+    let documentosEntregados = Array.from(documentos).map(doc => doc.value);
+    
+    // Criterios para determinar Completo, Incompleto, Expediente de Fuera
+    const documentosNecesarios = ["nacimiento", "titulo", "estudios"];
+    const expedienteFuera = documentosEntregados.includes("archivo");
+
+    let completo = documentosNecesarios.every(doc => documentosEntregados.includes(doc));
+    let incompleto = !completo && documentosEntregados.some(doc => documentosNecesarios.includes(doc));
+
+    // Crear el objeto del estudiante
+    const estudiante = {
+        carnet,
+        nombre,
+        completo: completo ? "X" : "",
+        incompleto: incompleto ? "X" : "",
+        expedienteFuera: expedienteFuera ? "X" : ""
+    };
+
+    // Guardar el estudiante en localStorage
+    let estudiantes = JSON.parse(localStorage.getItem("estudiantes")) || [];
+    estudiantes.push(estudiante);
+    localStorage.setItem("estudiantes", JSON.stringify(estudiantes));
+
+    // Limpiar el formulario después de agregar el estudiante
+    document.getElementById("studentForm").reset();
+
+    // Recargar la lista de estudiantes
+    actualizarTabla();
+}
+
+
+    // Inicializar tabla al cargar la página
+    actualizarTabla();
+</script>
+
+</body>
 </html>
+
+
